@@ -13,12 +13,12 @@ def start_panel(_):
             InlineKeyboardButton(text=_["S_B_2"], url=config.SUPPORT_GROUP),
         ],
         [
-            InlineKeyboardButton(text=_["E_X_1"], url=config.UPSTREAM_REPO),
-            InlineKeyboardButton(text=_["S_B_11"], callback_data="about_page")  # About button
+            InlineKeyboardButton(text="Bots", url="https://t.me/Nexxxxxo_bots/140"),
+            InlineKeyboardButton(text=_["S_B_11"], callback_data="about_page")
         ],
     ]
     return buttons
-
+    
 def private_panel(_):
     buttons = [
         [
