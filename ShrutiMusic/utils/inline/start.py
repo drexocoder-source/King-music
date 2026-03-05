@@ -39,13 +39,19 @@ def private_panel(_):
         ],
         [
             InlineKeyboardButton(
-                text=_["E_X_1"],
-                callback_data="fork_repo"
+                text="Our Bots",
+                url="https://t.me/Nexxxxxo_bots/140"
             ),
-            InlineKeyboardButton(text=_["S_B_5"], user_id=config.OWNER_ID),
+            InlineKeyboardButton(
+                text="🏏 Cricket Game",
+                url="https://t.me/CricketLegacy2Bot"
+            ),
         ],
         [
-            InlineKeyboardButton(text=_["S_B_4"], callback_data="help_page_1")
+            InlineKeyboardButton(
+                text=_["S_B_4"],
+                callback_data="help_page_1"
+            )
         ],
     ]
     return buttons
