@@ -46,18 +46,18 @@ STRING5 = os.getenv("STRING_SESSION5", None)
 
 AUTO_LEAVING_ASSISTANT = bool(os.getenv("AUTO_LEAVING_ASSISTANT", False))
 
-START_IMG_URL = os.getenv("START_IMG_URL", "https://files.catbox.moe/7q8bfg.jpg")
-PING_IMG_URL = "https://files.catbox.moe/eehxb4.jpg"
-PLAYLIST_IMG_URL = "https://files.catbox.moe/eehxb4.jpg"
-STATS_IMG_URL = "https://files.catbox.moe/eehxb4.jpg"
-TELEGRAM_AUDIO_URL = "https://files.catbox.moe/eehxb4.jpg"
-TELEGRAM_VIDEO_URL = "https://files.catbox.moe/eehxb4.jpg"
-STREAM_IMG_URL = "https://files.catbox.moe/eehxb4.jpg"
-SOUNCLOUD_IMG_URL = "https://files.catbox.moe/eehxb4.jpg"
-YOUTUBE_IMG_URL = "https://files.catbox.moe/eehxb4.jpg"
-SPOTIFY_ARTIST_IMG_URL = "https://files.catbox.moe/eehxb4.jpg"
-SPOTIFY_ALBUM_IMG_URL = "https://files.catbox.moe/eehxb4.jpg"
-SPOTIFY_PLAYLIST_IMG_URL = "https://files.catbox.moe/eehxb4.jpg"
+START_IMG_URL = os.getenv("START_IMG_URL", "https://graph.org/file/77b5dba10c636086a9c37-2b4c88cab78a090a73.jpg")
+PING_IMG_URL = "https://graph.org/file/77b5dba10c636086a9c37-2b4c88cab78a090a73.jpg"
+PLAYLIST_IMG_URL = "https://graph.org/file/49fb3e7bdada76db8ff5b-b2791a80ff9212c041.jpg"
+STATS_IMG_URL = "https://graph.org/file/c84d63ff0bf3800295b0f-5807d6e4c1064a041c.jpg"
+TELEGRAM_AUDIO_URL = "https://graph.org/file/49fb3e7bdada76db8ff5b-b2791a80ff9212c041.jpg"
+TELEGRAM_VIDEO_URL = "https://graph.org/file/49fb3e7bdada76db8ff5b-b2791a80ff9212c041.jpg"
+STREAM_IMG_URL = "https://graph.org/file/4d695214a9c11d14ca8e9-60f4fff1fa19866848.jpg"
+SOUNCLOUD_IMG_URL = "https://graph.org/file/c84d63ff0bf3800295b0f-5807d6e4c1064a041c.jpg"
+YOUTUBE_IMG_URL = "https://graph.org/file/4d695214a9c11d14ca8e9-60f4fff1fa19866848.jpg"
+SPOTIFY_ARTIST_IMG_URL = "https://graph.org/file/c22f09b26987665ca7c3f-087893c85d6e02151c.jpg"
+SPOTIFY_ALBUM_IMG_URL = "https://graph.org/file/c22f09b26987665ca7c3f-087893c85d6e02151c.jpg"
+SPOTIFY_PLAYLIST_IMG_URL = "https://graph.org/file/c84d63ff0bf3800295b0f-5807d6e4c1064a041c.jpg"
 
 BANNED_USERS = filters.user()
 adminlist = {}
