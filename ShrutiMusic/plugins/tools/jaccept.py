@@ -31,7 +31,6 @@ async def set_approval(chat_id: int, status: bool):
     )
 
 
-
 @app.on_message(filters.command("approval") & filters.group & ~BANNED_USERS)
 @adminsOnly("can_invite_users")
 async def approval_toggle(_, message: Message):
@@ -39,22 +38,22 @@ async def approval_toggle(_, message: Message):
     if len(message.command) < 2:
         return await message.reply_text(
             "Usage:\n"
-            "`/approval on`\n"
-            "`/approval off`"
+            "<code>/approval on</code>\n"
+            "<code>/approval off</code>"
         )
 
     state = message.command[1].lower()
 
     if state == "on":
         await set_approval(message.chat.id, True)
-        await message.reply_text("✅ **Join Request Approval Enabled.**")
+        await message.reply_text("✅ <b>Join Request Approval Enabled.</b>")
 
     elif state == "off":
         await set_approval(message.chat.id, False)
-        await message.reply_text("❌ **Join Request Approval Disabled.**")
+        await message.reply_text("❌ <b>Join Request Approval Disabled.</b>")
 
     else:
-        await message.reply_text("Use `on` or `off`.")
+        await message.reply_text("Use <code>on</code> or <code>off</code>.")
 
 
 # ---------------- JOIN REQUEST EVENT ---------------- #
@@ -73,10 +72,10 @@ async def join_request_handler(_, request: ChatJoinRequest):
     username = f"@{user.username}" if user.username else "No Username"
 
     text = (
-        "**📥 New Join Request**\n\n"
-        f"**Name:** {mention}\n"
-        f"**Username:** {username}\n"
-        f"**User ID:** `{user.id}`"
+        "<b>📥 New Join Request</b>\n\n"
+        f"<b>Name:</b> {mention}\n"
+        f"<b>Username:</b> {username}\n"
+        f"<b>User ID:</b> <code>{user.id}</code>"
     )
 
     buttons = InlineKeyboardMarkup(
@@ -128,7 +127,7 @@ async def approval_buttons(_, query: CallbackQuery):
         user = await app.get_users(user_id)
 
         await query.message.edit_text(
-            f"✅ **Join Request Accepted**\n\n{user.mention} joined the group."
+            f"✅ <b>Join Request Accepted</b>\n\n{user.mention} joined the group."
         )
 
     elif action == "decline":
@@ -138,7 +137,7 @@ async def approval_buttons(_, query: CallbackQuery):
         user = await app.get_users(user_id)
 
         await query.message.edit_text(
-            f"❌ **Join Request Declined**\n\n{user.mention} request rejected."
+            f"❌ <b>Join Request Declined</b>\n\n{user.mention} request rejected."
         )
 
     await query.answer()
