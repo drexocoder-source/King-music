@@ -214,7 +214,6 @@ async def gen_thumb(videoid: str):
         title = result.get("title", "Unknown Title")
         duration = result.get("duration", "0:00")
         thumburl = result["thumbnails"][0]["url"].split("?")[0]
-        views = result.get("viewCount", {}).get("short", "")
         channel = result.get("channel", {}).get("name", "")
 
         try:
@@ -234,20 +233,32 @@ async def gen_thumb(videoid: str):
 
     except:
         base_img = Image.open(DEFAULT_THUMB).convert("RGBA")
-        title = "Shruti Music"
+        title = "Nexora Music"
         duration = "0:00"
-        channel = "ShrutiBots"
+        channel = "NexoraBots"
 
     try:
 
         canvas = Image.new("RGBA", (CANVAS_W, CANVAS_H), (15, 15, 20, 255))
         draw = ImageDraw.Draw(canvas)
+
         # ---------- BACKGROUND ----------
         bg = base_img.resize((CANVAS_W, CANVAS_H))
-        bg = bg.filter(ImageFilter.GaussianBlur(70))
-        bg = ImageEnhance.Brightness(bg).enhance(0.35)
+        bg = bg.filter(ImageFilter.GaussianBlur(90))
+        bg = ImageEnhance.Brightness(bg).enhance(0.30)
+        bg = ImageEnhance.Color(bg).enhance(0.7)
 
         canvas.paste(bg, (0, 0))
+
+        # gradient overlay
+        overlay = Image.new("RGBA", (CANVAS_W, CANVAS_H), (0,0,0,0))
+        odraw = ImageDraw.Draw(overlay)
+
+        for y in range(CANVAS_H):
+            alpha = int(140 * (y / CANVAS_H))
+            odraw.line([(0,y),(CANVAS_W,y)], fill=(0,0,0,alpha))
+
+        canvas = Image.alpha_composite(canvas, overlay)
 
         # ---------- GLASS CARD ----------
         card_w = 880
@@ -255,12 +266,19 @@ async def gen_thumb(videoid: str):
         card_x = (CANVAS_W - card_w) // 2
         card_y = (CANVAS_H - card_h) // 2
 
-        card = Image.new("RGBA", (card_w, card_h), (40, 40, 45, 210))
+        card = Image.new("RGBA", (card_w, card_h), (35,35,40,220))
 
         mask = Image.new("L", (card_w, card_h), 0)
         mdraw = ImageDraw.Draw(mask)
-        mdraw.rounded_rectangle((0,0,card_w,card_h), 50, fill=255)
+        mdraw.rounded_rectangle((0,0,card_w,card_h), 60, fill=255)
 
+        # shadow
+        shadow = Image.new("RGBA", (card_w+60, card_h+60), (0,0,0,0))
+        sdraw = ImageDraw.Draw(shadow)
+        sdraw.rounded_rectangle((0,0,card_w+60,card_h+60), 70, fill=(0,0,0,160))
+        shadow = shadow.filter(ImageFilter.GaussianBlur(40))
+
+        canvas.paste(shadow, (card_x-30, card_y-15), shadow)
         canvas.paste(card, (card_x, card_y), mask)
 
         # ---------- ALBUM ART ----------
@@ -276,10 +294,17 @@ async def gen_thumb(videoid: str):
         art_x = CANVAS_W//2 - art_size//2
         art_y = card_y + 40
 
+        # glow
+        glow = Image.new("RGBA", (art_size+120, art_size+120), (0,0,0,0))
+        gdraw = ImageDraw.Draw(glow)
+        gdraw.ellipse((0,0,art_size+120,art_size+120), fill=(255,210,130,90))
+        glow = glow.filter(ImageFilter.GaussianBlur(60))
+
+        canvas.paste(glow, (art_x-60, art_y-60), glow)
         canvas.paste(art, (art_x, art_y), art)
 
         # ---------- FONTS ----------
-        title_font = ImageFont.truetype(FONT_BOLD_PATH, 52)
+        title_font = ImageFont.truetype(FONT_BOLD_PATH, 48)
         meta_font = ImageFont.truetype(FONT_REGULAR_PATH, 30)
         small_font = ImageFont.truetype(FONT_REGULAR_PATH, 26)
 
@@ -295,22 +320,26 @@ async def gen_thumb(videoid: str):
         )
 
         # ---------- SONG TITLE ----------
-        title = title[:36]
-        w = draw.textlength(title, font=title_font)
+        title = title[:32]
+        lines = wrap_text(draw, title, title_font, 700)
 
-        draw.text(
-            (CANVAS_W//2 - w//2, art_y + art_size + 55),
-            title,
-            fill=(255,255,255),
-            font=title_font
-        )
+        y = art_y + art_size + 55
+        for line in lines:
+            w = draw.textlength(line, font=title_font)
+            draw.text(
+                (CANVAS_W//2 - w//2, y),
+                line,
+                fill=(255,255,255),
+                font=title_font
+            )
+            y += 50
 
         # ---------- CHANNEL ----------
-        ch = f"King Music • {channel}"
+        ch = f"{channel}"
         w = draw.textlength(ch, font=small_font)
 
         draw.text(
-            (CANVAS_W//2 - w//2, art_y + art_size + 115),
+            (CANVAS_W//2 - w//2, y + 5),
             ch,
             fill=(170,170,170),
             font=small_font
@@ -319,26 +348,25 @@ async def gen_thumb(videoid: str):
         # ---------- PROGRESS BAR ----------
         bar_w = 640
         bar_h = 8
-
         bar_x = CANVAS_W//2 - bar_w//2
-        bar_y = art_y + art_size + 170
+        bar_y = y + 55
 
         draw.rounded_rectangle(
             (bar_x, bar_y, bar_x+bar_w, bar_y+bar_h),
             10,
-            fill=(90,90,90)
+            fill=(70,70,70)
         )
 
-        progress = int(bar_w * 0.35)
+        progress = int(bar_w * 0.45)
 
         draw.rounded_rectangle(
             (bar_x, bar_y, bar_x+progress, bar_y+bar_h),
             10,
-            fill=(255,210,130)
+            fill=(255,200,120)
         )
 
         draw.ellipse(
-            (bar_x+progress-6, bar_y-4, bar_x+progress+6, bar_y+12),
+            (bar_x+progress-7, bar_y-5, bar_x+progress+7, bar_y+13),
             fill=(255,255,255)
         )
 
@@ -367,17 +395,22 @@ async def gen_thumb(videoid: str):
             (CANVAS_W//2 - 60, center_y + 20)
         ], fill=(230,230,230))
 
-        # play
+        # play glow circle
+        draw.ellipse(
+            (CANVAS_W//2 - 40, center_y - 40, CANVAS_W//2 + 40, center_y + 40),
+            fill=(255,210,130)
+        )
+
         draw.ellipse(
             (CANVAS_W//2 - 30, center_y - 30, CANVAS_W//2 + 30, center_y + 30),
-            fill=(255,210,130)
+            fill=(35,35,35)
         )
 
         draw.polygon([
             (CANVAS_W//2 - 8, center_y - 12),
             (CANVAS_W//2 - 8, center_y + 12),
-            (CANVAS_W//2 + 14, center_y)
-        ], fill=(20,20,20))
+            (CANVAS_W//2 + 16, center_y)
+        ], fill=(255,210,130))
 
         # next
         draw.polygon([
@@ -386,14 +419,12 @@ async def gen_thumb(videoid: str):
             (CANVAS_W//2 + 60, center_y + 20)
         ], fill=(230,230,230))
 
-        # ---------- WATERMARK ----------
-        watermark = "NexoraBots"
-        w = draw.textlength(watermark, font=small_font)
-
+        # ---------- BRAND ----------
+        brand = "NexoraBots"
         draw.text(
-            (CANVAS_W - w - 40, CANVAS_H - 40),
-            watermark,
-            fill=(200,200,200),
+            (CANVAS_W - 200, 40),
+            brand,
+            fill=(255,255,255,180),
             font=small_font
         )
 
@@ -405,6 +436,13 @@ async def gen_thumb(videoid: str):
             fill=(200,200,200),
             font=small_font
         )
+
+        # ---------- PARTICLES ----------
+        for _ in range(20):
+            x = random.randint(0, CANVAS_W)
+            y = random.randint(0, CANVAS_H)
+            r = random.randint(1,3)
+            draw.ellipse((x,y,x+r,y+r), fill=(255,255,255,60))
 
         # ---------- SAVE ----------
         out = CACHE_DIR / f"{videoid}_final.png"
