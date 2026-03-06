@@ -100,44 +100,53 @@ async def join_request_handler(_, request: ChatJoinRequest):
 
 @app.on_callback_query(filters.regex("approve_|decline_"))
 async def approval_buttons(_, query: CallbackQuery):
+    try:
 
-    data = query.data.split("_")
-    action = data[0]
-    chat_id = int(data[1])
-    user_id = int(data[2])
+        data = query.data.split("_")
+        action = data[0]
+        chat_id = int(data[1])
+        user_id = int(data[2])
 
-    member = await app.get_chat_member(chat_id, query.from_user.id)
+        member = await app.get_chat_member(chat_id, query.from_user.id)
 
-    if member.status not in [
-        ChatMemberStatus.ADMINISTRATOR,
-        ChatMemberStatus.OWNER
-    ]:
-        return await query.answer("Admins only.", show_alert=True)
+        if member.status not in [
+            ChatMemberStatus.ADMINISTRATOR,
+            ChatMemberStatus.OWNER
+        ]:
+            return await query.answer("Admins only.", show_alert=True)
 
-    if not member.privileges.can_invite_users:
-        return await query.answer(
-            "You need invite permission.",
-            show_alert=True
-        )
+        if not member.privileges.can_invite_users:
+            return await query.answer(
+                "You need invite permission.",
+                show_alert=True
+            )
 
-    if action == "approve":
+        if action == "approve":
 
-        await app.approve_chat_join_request(chat_id, user_id)
+            await app.approve_chat_join_request(chat_id, user_id)
 
-        user = await app.get_users(user_id)
+            user = await app.get_users(user_id)
 
-        await query.message.edit_text(
-            f"✅ <b>Join Request Accepted</b>\n\n{user.mention} joined the group."
-        )
+            await query.message.edit_text(
+                f"✅ Join Request Accepted\n\n{user.mention} joined the group."
+            )
 
-    elif action == "decline":
+        elif action == "decline":
 
-        await app.decline_chat_join_request(chat_id, user_id)
+            await app.decline_chat_join_request(chat_id, user_id)
 
-        user = await app.get_users(user_id)
+            user = await app.get_users(user_id)
 
-        await query.message.edit_text(
-            f"❌ <b>Join Request Declined</b>\n\n{user.mention} request rejected."
-        )
+            await query.message.edit_text(
+                f"❌ Join Request Declined\n\n{user.mention} request rejected."
+            )
 
-    await query.answer()
+        await query.answer()
+
+    except Exception as e:
+        print(f"Approval Error: {e}")
+
+        try:
+            await query.answer("Error occurred.", show_alert=True)
+        except:
+            pass
