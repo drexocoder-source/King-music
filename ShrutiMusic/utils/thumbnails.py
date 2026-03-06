@@ -242,147 +242,169 @@ async def gen_thumb(videoid: str):
 
         canvas = Image.new("RGBA", (CANVAS_W, CANVAS_H), (15, 15, 20, 255))
         draw = ImageDraw.Draw(canvas)
-
-        # ---------- BACKGROUND BLUR ----------
+        # ---------- BACKGROUND ----------
         bg = base_img.resize((CANVAS_W, CANVAS_H))
-        bg = bg.filter(ImageFilter.GaussianBlur(60))
-        enhancer = ImageEnhance.Brightness(bg)
-        bg = enhancer.enhance(0.4)
+        bg = bg.filter(ImageFilter.GaussianBlur(70))
+        bg = ImageEnhance.Brightness(bg).enhance(0.35)
 
         canvas.paste(bg, (0, 0))
 
         # ---------- GLASS CARD ----------
-        card_w = 900
-        card_h = 600
+        card_w = 880
+        card_h = 540
         card_x = (CANVAS_W - card_w) // 2
         card_y = (CANVAS_H - card_h) // 2
 
-        card = Image.new("RGBA", (card_w, card_h), (30, 30, 35, 200))
+        card = Image.new("RGBA", (card_w, card_h), (40, 40, 45, 210))
 
         mask = Image.new("L", (card_w, card_h), 0)
         mdraw = ImageDraw.Draw(mask)
-        mdraw.rounded_rectangle((0, 0, card_w, card_h), 40, fill=255)
+        mdraw.rounded_rectangle((0,0,card_w,card_h), 50, fill=255)
 
         canvas.paste(card, (card_x, card_y), mask)
 
         # ---------- ALBUM ART ----------
-        art_size = 360
+        art_size = 260
         art = base_img.resize((art_size, art_size))
 
         art_mask = Image.new("L", (art_size, art_size), 0)
         adraw = ImageDraw.Draw(art_mask)
-        adraw.rounded_rectangle((0, 0, art_size, art_size), 30, fill=255)
-
-        art_x = CANVAS_W // 2 - art_size // 2
-        art_y = card_y + 40
+        adraw.rounded_rectangle((0,0,art_size,art_size), 40, fill=255)
 
         art.putalpha(art_mask)
+
+        art_x = CANVAS_W//2 - art_size//2
+        art_y = card_y + 40
+
         canvas.paste(art, (art_x, art_y), art)
 
         # ---------- FONTS ----------
-        title_font = ImageFont.truetype(FONT_BOLD_PATH, 60)
-        meta_font = ImageFont.truetype(FONT_REGULAR_PATH, 36)
-        time_font = ImageFont.truetype(FONT_REGULAR_PATH, 28)
+        title_font = ImageFont.truetype(FONT_BOLD_PATH, 52)
+        meta_font = ImageFont.truetype(FONT_REGULAR_PATH, 30)
+        small_font = ImageFont.truetype(FONT_REGULAR_PATH, 26)
 
         # ---------- NOW PLAYING ----------
-        np_text = "Now Playing"
-        w = draw.textlength(np_text, font=meta_font)
+        now = "Now Playing"
+        w = draw.textlength(now, font=meta_font)
 
         draw.text(
-            (CANVAS_W//2 - w//2, art_y + art_size + 20),
-            np_text,
-            fill=(220,220,220),
+            (CANVAS_W//2 - w//2, art_y + art_size + 15),
+            now,
+            fill=(200,200,200),
             font=meta_font
         )
 
         # ---------- SONG TITLE ----------
-        title = title[:40]
-
+        title = title[:36]
         w = draw.textlength(title, font=title_font)
 
         draw.text(
-            (CANVAS_W//2 - w//2, art_y + art_size + 70),
+            (CANVAS_W//2 - w//2, art_y + art_size + 55),
             title,
             fill=(255,255,255),
             font=title_font
         )
 
+        # ---------- CHANNEL ----------
+        ch = f"King Music • {channel}"
+        w = draw.textlength(ch, font=small_font)
+
+        draw.text(
+            (CANVAS_W//2 - w//2, art_y + art_size + 115),
+            ch,
+            fill=(170,170,170),
+            font=small_font
+        )
+
         # ---------- PROGRESS BAR ----------
-        bar_w = 700
-        bar_h = 10
+        bar_w = 640
+        bar_h = 8
 
         bar_x = CANVAS_W//2 - bar_w//2
         bar_y = art_y + art_size + 170
 
         draw.rounded_rectangle(
             (bar_x, bar_y, bar_x+bar_w, bar_y+bar_h),
-            8,
-            fill=(80,80,80)
+            10,
+            fill=(90,90,90)
         )
 
         progress = int(bar_w * 0.35)
 
         draw.rounded_rectangle(
             (bar_x, bar_y, bar_x+progress, bar_y+bar_h),
-            8,
-            fill=(255,210,120)
+            10,
+            fill=(255,210,130)
         )
 
-        knob_x = bar_x + progress
-
         draw.ellipse(
-            (knob_x-8, bar_y-6, knob_x+8, bar_y+14),
+            (bar_x+progress-6, bar_y-4, bar_x+progress+6, bar_y+12),
             fill=(255,255,255)
         )
 
-        # ---------- TIME TEXT ----------
+        # ---------- TIME ----------
         draw.text(
-            (bar_x, bar_y + 25),
+            (bar_x, bar_y + 18),
             "1:24",
             fill=(200,200,200),
-            font=time_font
+            font=small_font
         )
 
         draw.text(
-            (bar_x + bar_w - 60, bar_y + 25),
+            (bar_x + bar_w - 55, bar_y + 18),
             duration,
             fill=(200,200,200),
-            font=time_font
+            font=small_font
         )
 
         # ---------- PLAYER BUTTONS ----------
-        center_y = bar_y + 90
+        center_y = bar_y + 75
 
         # back
         draw.polygon([
-            (CANVAS_W//2 - 120, center_y),
-            (CANVAS_W//2 - 80, center_y - 25),
-            (CANVAS_W//2 - 80, center_y + 25)
+            (CANVAS_W//2 - 90, center_y),
+            (CANVAS_W//2 - 60, center_y - 20),
+            (CANVAS_W//2 - 60, center_y + 20)
         ], fill=(230,230,230))
 
-        # play/pause
-        draw.rounded_rectangle(
-            (CANVAS_W//2 - 30, center_y - 35, CANVAS_W//2 + 30, center_y + 35),
-            18,
-            fill=(60,60,65)
+        # play
+        draw.ellipse(
+            (CANVAS_W//2 - 30, center_y - 30, CANVAS_W//2 + 30, center_y + 30),
+            fill=(255,210,130)
         )
 
-        draw.rectangle(
-            (CANVAS_W//2 - 10, center_y - 20, CANVAS_W//2 - 3, center_y + 20),
-            fill=(255,255,255)
-        )
-
-        draw.rectangle(
-            (CANVAS_W//2 + 3, center_y - 20, CANVAS_W//2 + 10, center_y + 20),
-            fill=(255,255,255)
-        )
+        draw.polygon([
+            (CANVAS_W//2 - 8, center_y - 12),
+            (CANVAS_W//2 - 8, center_y + 12),
+            (CANVAS_W//2 + 14, center_y)
+        ], fill=(20,20,20))
 
         # next
         draw.polygon([
-            (CANVAS_W//2 + 120, center_y),
-            (CANVAS_W//2 + 80, center_y - 25),
-            (CANVAS_W//2 + 80, center_y + 25)
+            (CANVAS_W//2 + 90, center_y),
+            (CANVAS_W//2 + 60, center_y - 20),
+            (CANVAS_W//2 + 60, center_y + 20)
         ], fill=(230,230,230))
+
+        # ---------- WATERMARK ----------
+        watermark = "NexoraBots"
+        w = draw.textlength(watermark, font=small_font)
+
+        draw.text(
+            (CANVAS_W - w - 40, CANVAS_H - 40),
+            watermark,
+            fill=(200,200,200),
+            font=small_font
+        )
+
+        # ---------- BOT TAG ----------
+        tag = "@Nexxxxxo_bots"
+        draw.text(
+            (40, CANVAS_H - 40),
+            tag,
+            fill=(200,200,200),
+            font=small_font
+        )
 
         # ---------- SAVE ----------
         out = CACHE_DIR / f"{videoid}_final.png"
