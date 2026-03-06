@@ -214,14 +214,13 @@ async def gen_thumb(videoid: str):
         title = result.get("title", "Unknown Title")
         duration = result.get("duration", "0:00")
         thumburl = result["thumbnails"][0]["url"].split("?")[0]
-        views = result.get("viewCount", {}).get("short", "")
         channel = result.get("channel", {}).get("name", "")
 
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(thumburl) as resp:
                     if resp.status == 200:
-                        thumb_path = CACHE_DIR / f"thumb{videoid}.png"
+                        thumb_path = CACHE_DIR / f"thumb_{videoid}.png"
                         async with aiofiles.open(thumb_path, "wb") as f:
                             await f.write(await resp.read())
         except:
@@ -234,180 +233,213 @@ async def gen_thumb(videoid: str):
 
     except:
         base_img = Image.open(DEFAULT_THUMB).convert("RGBA")
-        title = "Shruti Music"
+        title = "King Music"
         duration = "0:00"
-        channel = "ShrutiBots"
+        channel = "Music Player"
 
     try:
 
-        canvas = Image.new("RGBA", (CANVAS_W, CANVAS_H), (15, 15, 20, 255))
+        # ---------------- CANVAS ---------------- #
+
+        canvas = Image.new("RGBA", (CANVAS_W, CANVAS_H))
         draw = ImageDraw.Draw(canvas)
-        # ---------- BACKGROUND ----------
+
+        # ---------------- BACKGROUND ---------------- #
+
         bg = base_img.resize((CANVAS_W, CANVAS_H))
-        bg = bg.filter(ImageFilter.GaussianBlur(70))
-        bg = ImageEnhance.Brightness(bg).enhance(0.35)
+        bg = bg.filter(ImageFilter.GaussianBlur(90))
+        bg = ImageEnhance.Brightness(bg).enhance(0.25)
 
         canvas.paste(bg, (0, 0))
 
-        # ---------- GLASS CARD ----------
-        card_w = 880
-        card_h = 540
+        # DARK OVERLAY
+        overlay = Image.new("RGBA", (CANVAS_W, CANVAS_H), (10, 10, 15, 180))
+        canvas = Image.alpha_composite(canvas, overlay)
+
+        draw = ImageDraw.Draw(canvas)
+
+        # ---------------- GLASS CARD ---------------- #
+
+        card_w = 900
+        card_h = 560
+
         card_x = (CANVAS_W - card_w) // 2
         card_y = (CANVAS_H - card_h) // 2
 
-        card = Image.new("RGBA", (card_w, card_h), (40, 40, 45, 210))
+        card = Image.new("RGBA", (card_w, card_h), (25, 25, 30, 210))
 
         mask = Image.new("L", (card_w, card_h), 0)
         mdraw = ImageDraw.Draw(mask)
-        mdraw.rounded_rectangle((0,0,card_w,card_h), 50, fill=255)
+        mdraw.rounded_rectangle((0, 0, card_w, card_h), 60, fill=255)
 
         canvas.paste(card, (card_x, card_y), mask)
 
-        # ---------- ALBUM ART ----------
-        art_size = 260
+        # ---------------- ALBUM ART ---------------- #
+
+        art_size = 300
+
         art = base_img.resize((art_size, art_size))
 
         art_mask = Image.new("L", (art_size, art_size), 0)
         adraw = ImageDraw.Draw(art_mask)
-        adraw.rounded_rectangle((0,0,art_size,art_size), 40, fill=255)
+        adraw.rounded_rectangle((0, 0, art_size, art_size), 45, fill=255)
 
         art.putalpha(art_mask)
 
-        art_x = CANVAS_W//2 - art_size//2
+        art_x = CANVAS_W // 2 - art_size // 2
         art_y = card_y + 40
 
         canvas.paste(art, (art_x, art_y), art)
 
-        # ---------- FONTS ----------
-        title_font = ImageFont.truetype(FONT_BOLD_PATH, 52)
-        meta_font = ImageFont.truetype(FONT_REGULAR_PATH, 30)
+        # ---------------- FONTS ---------------- #
+
+        title_font = ImageFont.truetype(FONT_BOLD_PATH, 60)
+        meta_font = ImageFont.truetype(FONT_REGULAR_PATH, 32)
         small_font = ImageFont.truetype(FONT_REGULAR_PATH, 26)
 
-        # ---------- NOW PLAYING ----------
-        now = "Now Playing"
-        w = draw.textlength(now, font=meta_font)
+        # ---------------- NOW PLAYING ---------------- #
+
+        now = "NOW PLAYING"
+
+        w = draw.textlength(now, font=small_font)
 
         draw.text(
-            (CANVAS_W//2 - w//2, art_y + art_size + 15),
+            (CANVAS_W // 2 - w // 2, art_y + art_size + 10),
             now,
-            fill=(200,200,200),
-            font=meta_font
+            fill=(180, 180, 180),
+            font=small_font,
         )
 
-        # ---------- SONG TITLE ----------
-        title = title[:36]
+        # ---------------- TITLE ---------------- #
+
+        title = title[:34]
+
         w = draw.textlength(title, font=title_font)
 
         draw.text(
-            (CANVAS_W//2 - w//2, art_y + art_size + 55),
+            (CANVAS_W // 2 - w // 2, art_y + art_size + 50),
             title,
-            fill=(255,255,255),
-            font=title_font
+            fill=(255, 255, 255),
+            font=title_font,
         )
 
-        # ---------- CHANNEL ----------
-        ch = f"King Music • {channel}"
-        w = draw.textlength(ch, font=small_font)
+        # ---------------- CHANNEL ---------------- #
+
+        ch = f"{channel}"
+
+        w = draw.textlength(ch, font=meta_font)
 
         draw.text(
-            (CANVAS_W//2 - w//2, art_y + art_size + 115),
+            (CANVAS_W // 2 - w // 2, art_y + art_size + 120),
             ch,
-            fill=(170,170,170),
-            font=small_font
+            fill=(200, 200, 200),
+            font=meta_font,
         )
 
-        # ---------- PROGRESS BAR ----------
+        # ---------------- PROGRESS BAR ---------------- #
+
         bar_w = 640
-        bar_h = 8
+        bar_h = 10
 
-        bar_x = CANVAS_W//2 - bar_w//2
-        bar_y = art_y + art_size + 170
+        bar_x = CANVAS_W // 2 - bar_w // 2
+        bar_y = art_y + art_size + 180
 
         draw.rounded_rectangle(
-            (bar_x, bar_y, bar_x+bar_w, bar_y+bar_h),
-            10,
-            fill=(90,90,90)
+            (bar_x, bar_y, bar_x + bar_w, bar_y + bar_h),
+            20,
+            fill=(80, 80, 80),
         )
 
-        progress = int(bar_w * 0.35)
+        progress = int(bar_w * 0.40)
 
         draw.rounded_rectangle(
-            (bar_x, bar_y, bar_x+progress, bar_y+bar_h),
-            10,
-            fill=(255,210,130)
+            (bar_x, bar_y, bar_x + progress, bar_y + bar_h),
+            20,
+            fill=(255, 200, 120),
         )
 
         draw.ellipse(
-            (bar_x+progress-6, bar_y-4, bar_x+progress+6, bar_y+12),
-            fill=(255,255,255)
+            (bar_x + progress - 8, bar_y - 4, bar_x + progress + 8, bar_y + 14),
+            fill=(255, 255, 255),
         )
 
-        # ---------- TIME ----------
+        # ---------------- TIME ---------------- #
+
         draw.text(
             (bar_x, bar_y + 18),
-            "1:24",
-            fill=(200,200,200),
-            font=small_font
+            "1:10",
+            fill=(210, 210, 210),
+            font=small_font,
         )
 
         draw.text(
-            (bar_x + bar_w - 55, bar_y + 18),
+            (bar_x + bar_w - 60, bar_y + 18),
             duration,
-            fill=(200,200,200),
-            font=small_font
+            fill=(210, 210, 210),
+            font=small_font,
         )
 
-        # ---------- PLAYER BUTTONS ----------
-        center_y = bar_y + 75
+        # ---------------- PLAYER CONTROLS ---------------- #
 
-        # back
-        draw.polygon([
-            (CANVAS_W//2 - 90, center_y),
-            (CANVAS_W//2 - 60, center_y - 20),
-            (CANVAS_W//2 - 60, center_y + 20)
-        ], fill=(230,230,230))
+        center_y = bar_y + 80
 
-        # play
+        # PREVIOUS
+        draw.polygon(
+            [
+                (CANVAS_W // 2 - 100, center_y),
+                (CANVAS_W // 2 - 70, center_y - 20),
+                (CANVAS_W // 2 - 70, center_y + 20),
+            ],
+            fill=(230, 230, 230),
+        )
+
+        # PLAY BUTTON
         draw.ellipse(
-            (CANVAS_W//2 - 30, center_y - 30, CANVAS_W//2 + 30, center_y + 30),
-            fill=(255,210,130)
+            (
+                CANVAS_W // 2 - 35,
+                center_y - 35,
+                CANVAS_W // 2 + 35,
+                center_y + 35,
+            ),
+            fill=(255, 200, 120),
         )
 
-        draw.polygon([
-            (CANVAS_W//2 - 8, center_y - 12),
-            (CANVAS_W//2 - 8, center_y + 12),
-            (CANVAS_W//2 + 14, center_y)
-        ], fill=(20,20,20))
+        draw.polygon(
+            [
+                (CANVAS_W // 2 - 8, center_y - 14),
+                (CANVAS_W // 2 - 8, center_y + 14),
+                (CANVAS_W // 2 + 18, center_y),
+            ],
+            fill=(20, 20, 20),
+        )
 
-        # next
-        draw.polygon([
-            (CANVAS_W//2 + 90, center_y),
-            (CANVAS_W//2 + 60, center_y - 20),
-            (CANVAS_W//2 + 60, center_y + 20)
-        ], fill=(230,230,230))
+        # NEXT
+        draw.polygon(
+            [
+                (CANVAS_W // 2 + 100, center_y),
+                (CANVAS_W // 2 + 70, center_y - 20),
+                (CANVAS_W // 2 + 70, center_y + 20),
+            ],
+            fill=(230, 230, 230),
+        )
 
-        # ---------- WATERMARK ----------
-        watermark = "NexoraBots"
+        # ---------------- WATERMARK ---------------- #
+
+        watermark = "King Music"
+
         w = draw.textlength(watermark, font=small_font)
 
         draw.text(
             (CANVAS_W - w - 40, CANVAS_H - 40),
             watermark,
-            fill=(200,200,200),
-            font=small_font
+            fill=(180, 180, 180),
+            font=small_font,
         )
 
-        # ---------- BOT TAG ----------
-        tag = "@Nexxxxxo_bots"
-        draw.text(
-            (40, CANVAS_H - 40),
-            tag,
-            fill=(200,200,200),
-            font=small_font
-        )
+        # ---------------- SAVE ---------------- #
 
-        # ---------- SAVE ----------
         out = CACHE_DIR / f"{videoid}_final.png"
+
         canvas.save(out)
 
         if thumb_path and thumb_path.exists():
