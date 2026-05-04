@@ -25,7 +25,7 @@ services:
     sync: false
 
   * key: BOT_TOKEN
-    sync: "8658804006:AAFCrnrsTOYKolMSv7AFWQpGv0VjUm4Gf24"
+    value: "8658804006:AAFCrnrsTOYKolMSv7AFWQpGv0VjUm4Gf24"
 
   * key: MONGO_DB_URI
     value: "mongodb+srv://pusers:nycreation@nycreation.pd4klp1.mongodb.net/?retryWrites=true&w=majority&appName=NYCREATION"
@@ -43,7 +43,7 @@ services:
     value: "https://github.com/NoxxOP/ShrutiMusic"
 
   * key: STRING_SESSION
-    sync: "BQHyaNcAmVtDYkkUf6uo30yOsLm9TD5Yoo7ACP4o1U-bm8Y3v8pu4R12pIBvSWYGxUK-KeaUoeuJjpCQuayUZ0nYoBWTEJhVWiooOl4gAcpkR945ds7bcTFrsekp_fPr2YTdhskPh53qODRZdPHHGWTZvW3jKgsFGJKhy8fDmiVOX7K8z-iuGB3ZMWydKNm3MbY12BVfzM64KWsuJMh20tsYKtmM4E4ZdmN08MIYm5FMv1gs3TeyrwZFsb6RZYrSWX2armriPbqDe2rP8NZaM7_tV-ENnX-07x8OC1oBRB4ngJKwh5e4Vv4V_F45uLPtqilkmHTECl5OgY4Z6p1aV0n98YTLgwAAAAHn7XzDAA"
+    value: "BQHyaNcAmVtDYkkUf6uo30yOsLm9TD5Yoo7ACP4o1U-bm8Y3v8pu4R12pIBvSWYGxUK-KeaUoeuJjpCQuayUZ0nYoBWTEJhVWiooOl4gAcpkR945ds7bcTFrsekp_fPr2YTdhskPh53qODRZdPHHGWTZvW3jKgsFGJKhy8fDmiVOX7K8z-iuGB3ZMWydKNm3MbY12BVfzM64KWsuJMh20tsYKtmM4E4ZdmN08MIYm5FMv1gs3TeyrwZFsb6RZYrSWX2armriPbqDe2rP8NZaM7_tV-ENnX-07x8OC1oBRB4ngJKwh5e4Vv4V_F45uLPtqilkmHTECl5OgY4Z6p1aV0n98YTLgwAAAAHn7XzDAA"
 
   * key: GIT_TOKEN
     sync: false
