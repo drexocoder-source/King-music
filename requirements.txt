@@ -1,9 +1,8 @@
 pyrofork
-tgcrypto
-kurigram==2.1.35
-
+gTTS
 aiofiles
 aiohttp
+asyncio
 beautifulsoup4
 dnspython
 ffmpeg-python
@@ -12,23 +11,28 @@ hachoir
 heroku3
 httpx
 motor
-
-numpy==1.26.4
-opencv-python-headless==4.9.0.80
-
+numpy
+opencv-python
 pytz
-pillow==10.4.0
+pillow==9.5.0
 psutil
-
-py-tgcalls==2.2.12
-
+py-tgcalls==0.9.7
+pykeyboard
+kurigram==2.1.35
 python-dotenv
 pyyaml
 requests
 speedtest-cli
 spotipy
-telegraph
+tgcrypto
+telegraph 
 unidecode
-
+youtube-search
 youtube-search-python
+py-yt-search
 yt-dlp
+# ===========================================
+# ©️ 2025 Nand Yaduwanshi , aka @NoxxOP
+# 🔗 GitHub : https://github.com/NoxxOP/ShrutiMusic
+# 📢 Telegram Channel : https://t.me/ShrutiBots
+# ===========================================
