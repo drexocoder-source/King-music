@@ -1,20 +1,16 @@
 services:
-
-- type: web
-  name: shruti-music
-  env: python
-  region: oregon
-  plan: free
-
-  buildCommand: |
-   apt-get update && apt-get install -y ffmpeg
-   pip install -r requirements.txt
-
-  startCommand: python3 -m ShrutiMusic
-  autoDeploy: true
+  - type: web
+    name: shruti-music
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: |
+      apt-get update && apt-get install -y ffmpeg
+      pip install -r requirements.txt
+    startCommand: python3 -m ShrutiMusic
+    autoDeploy: true
 
   envVars:
-
     key: API_ID
     value: "29448785"
 
