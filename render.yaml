@@ -1,55 +1,80 @@
 services:
-  - type: web
-    name: shruti-music
-    env: python
-    region: oregon
-    plan: free
-    buildCommand: |
-      apt-get update && apt-get install -y ffmpeg
-      pip install -r requirements.txt
-    startCommand: python3 -m ShrutiMusic
-    autoDeploy: true
 
-    envVars:
-      API_ID: 
-        value: 29448785
-      API_HASH: 
-        value: 599574f6aff0a09ebb76305b58e7e9c2
-      API_KEY:
-        sync: false
-      BOT_TOKEN:
-        sync: false
-      MONGO_DB_URI: 
-        value: mongodb+srv://pusers:nycreation@nycreation.pd4klp1.mongodb.net/?retryWrites=true&w=majority&appName=NYCREATION
-      OWNER_ID:
-        value: 7574330905
-      OWNER_USERNAME:
-        value: WTF_WhyMeeh
-      BOT_USERNAME:
-        value: ShrutixMusicBot
-      UPSTREAM_REPO:
-        value: https://github.com/NoxxOP/ShrutiMusic
-      STRING_SESSION:
-        sync: false
-      GIT_TOKEN:
-        sync: false
-      HEROKU_API_KEY:
-        sync: false
-      HEROKU_APP_NAME:
-        sync: false
-      LOG_GROUP_ID:
-        value: -1002321189618
-      SUPPORT_GROUP:
-        value: https://t.me/ShrutiBotsupport
-      SUPPORT_CHANNEL:
-        value: https://t.me/ShrutiBots
-      INSTAGRAM:
-        value: https://instagram.com/yaduwanshi_nand
-      YOUTUBE:
-        value: https://youtube.com/@NandEditz
-      GITHUB:
-        value: https://github.com/NoxxOP
-      DONATE:
-        value: https://t.me/ShrutiBots/91
-      START_IMG_URL:
-        sync: false
+* type: web
+  name: shruti-music
+  env: python
+  region: oregon
+  plan: free
+
+  buildCommand: |
+  apt-get update && apt-get install -y ffmpeg
+  pip install -r requirements.txt
+
+  startCommand: python3 -m ShrutiMusic
+  autoDeploy: true
+
+  envVars:
+
+  * key: API_ID
+    value: "29448785"
+
+  * key: API_HASH
+    value: "599574f6aff0a09ebb76305b58e7e9c2"
+
+  * key: API_KEY
+    sync: false
+
+  * key: BOT_TOKEN
+    sync: "8658804006:AAFCrnrsTOYKolMSv7AFWQpGv0VjUm4Gf24"
+
+  * key: MONGO_DB_URI
+    value: "mongodb+srv://pusers:nycreation@nycreation.pd4klp1.mongodb.net/?retryWrites=true&w=majority&appName=NYCREATION"
+
+  * key: OWNER_ID
+    value: "7574330905"
+
+  * key: OWNER_USERNAME
+    value: "WTF_WhyMeeh"
+
+  * key: BOT_USERNAME
+    value: "ShrutixMusicBot"
+
+  * key: UPSTREAM_REPO
+    value: "https://github.com/NoxxOP/ShrutiMusic"
+
+  * key: STRING_SESSION
+    sync: "BQHyaNcAmVtDYkkUf6uo30yOsLm9TD5Yoo7ACP4o1U-bm8Y3v8pu4R12pIBvSWYGxUK-KeaUoeuJjpCQuayUZ0nYoBWTEJhVWiooOl4gAcpkR945ds7bcTFrsekp_fPr2YTdhskPh53qODRZdPHHGWTZvW3jKgsFGJKhy8fDmiVOX7K8z-iuGB3ZMWydKNm3MbY12BVfzM64KWsuJMh20tsYKtmM4E4ZdmN08MIYm5FMv1gs3TeyrwZFsb6RZYrSWX2armriPbqDe2rP8NZaM7_tV-ENnX-07x8OC1oBRB4ngJKwh5e4Vv4V_F45uLPtqilkmHTECl5OgY4Z6p1aV0n98YTLgwAAAAHn7XzDAA"
+
+  * key: GIT_TOKEN
+    sync: false
+
+  * key: HEROKU_API_KEY
+    sync: false
+
+  * key: HEROKU_APP_NAME
+    sync: false
+
+  * key: LOG_GROUP_ID
+    value: "-1003692127639"
+
+  * key: SUPPORT_GROUP
+    value: "https://t.me/ShrutiBotsupport"
+
+  * key: SUPPORT_CHANNEL
+    value: "https://t.me/ShrutiBots"
+
+  * key: INSTAGRAM
+    value: "https://instagram.com/yaduwanshi_nand"
+
+  * key: YOUTUBE
+    value: "https://youtube.com/@NandEditz"
+
+  * key: GITHUB
+    value: "https://github.com/NoxxOP"
+
+  * key: DONATE
+    value: "https://t.me/ShrutiBots/91"
+
+  * key: START_IMG_URL
+    sync: false
+
